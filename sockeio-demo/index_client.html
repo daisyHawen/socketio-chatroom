@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Examples</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+</head>
+<body>
+    <textarea id="content" cols="30" rows="10"></textarea>
+    <button id="confirm">确认</button>
+</body>
+<script type="text/javascript" src="http://g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+<script src='./socket.io.js'></script>
+<script>
+    //发起连接
+	var socket=io('127.0.0.1:3000');
+	//测试
+	socket.on('test',function(data) {
+		 console.log(data);
+		 socket.emit('my other event',{my:'test'});
+	})
+	//发起join事件
+	socket.emit('join',function (data) {
+		// console.log('发起join事件');
+		console.log(data.username+'加入了聊天室');
+	})
+	//收到离开聊天室广播后
+	socket.on('broadcast_quit',function(data) {
+		 // body...  
+		 console.log(data.username+'离开了聊天室');
+	})
+	//收到别人发送的消息后，显示消息
+	socket.on('broadcast_say',function (data) {
+		 /* body... */ 
+		 console.log(data.username+'说'+data.text);
+	})
+	$("#confirm").click(function(e){
+		console.log('test');
+		var text=$('#content').val();
+		socket.emit('say',{
+			username:'Username hehe',
+			text:text
+		})
+	})
+</script>
+</html>
